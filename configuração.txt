@@ -10,3 +10,8 @@ cd SilvinhaHealthApp
 
 Extensão: Pesquisa React -> ES7+ React/Redux/React
 
+Atualiza os pacotes do node:
+npm i
+
+Executar o projeto: 
+npx expo start --localhost --android
