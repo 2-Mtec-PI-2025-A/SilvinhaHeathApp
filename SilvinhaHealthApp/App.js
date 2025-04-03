@@ -1,8 +1,31 @@
+import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard } from 'react-native';
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function App() {
+  const [height, setHeight] = useState(null);
+  const [weight, setWeight] = useState(null);
+  const [imc, setImc] = useState(null);
+  const [textButton, setTextButton] = useState("Calcular");
+  const [messageImc, setMessageImc] = useState("Preencha o peso e a altura");
+
+  function validateImc() {
+    if (weight != null && height != null)
+    {
+      Keyboard.dismiss();
+      setImc((weight / (height * height)).toFixed(2))
+      setHeight(null);
+      setWeight(null);
+      setTextButton("Calcular Novamente");
+      setMessageImc("Seu IMC é igual a:");
+      return;
+    }
+    setImc(null);
+    setTextButton("Calcular");
+    setMessageImc("Preencha o peso e a altura")
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.titleBox}>
@@ -16,6 +39,8 @@ export default function App() {
           <Text style={styles.label}>Altura</Text>
           <TextInput
             style={styles.input}
+            onChangeText={setHeight}
+            value={height ?? ''}
             placeholder='Ex. 1.70'
             keyboardType='numeric'
           />
@@ -25,6 +50,8 @@ export default function App() {
           <Text style={styles.label}>Peso</Text>
           <TextInput
             style={styles.input}
+            onChangeText={setWeight}
+            value={weight ?? ''}
             placeholder='Ex. 80.360'
             keyboardType='numeric'
           />
@@ -32,11 +59,16 @@ export default function App() {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => alert('AHHHHHHHHHHHHHHHHHH')}
+          onPress={() => validateImc()}
         >
           <Ionicons name={"calculator-sharp"} size={24} color="#edf2f4" />
-          <Text style={styles.text}>Calcular</Text>
+          <Text style={styles.text}>{textButton}</Text>
         </TouchableOpacity>
+
+        <View style={styles.imcContainer}>
+          <Text style={styles.imcText}>{messageImc}</Text>
+          <Text style={styles.imcResult}>{imc}</Text>
+        </View>
 
       </View>
 
@@ -105,5 +137,21 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginLeft: 5
+  },
+  imcContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  imcText: {
+    fontSize: 18,
+    color: '#ef233c',
+    fontWeight: 'bold'
+  },
+  imcResult: {
+    fontSize: 48,
+    color: '#ef233c',
+    fontWeight: 'bold'
   }
 });
